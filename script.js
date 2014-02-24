@@ -46,6 +46,20 @@ hashtagPlot.addEventListener('mouseout', playVideo, false);
 function playVideo(e) {
 	scrubBar.style.visibility = "hidden";
 	SOTUvideo.play();
+	videoPlaying();
+}
+// function to display scrubBar moving along with video
+function videoPlaying() {
+	
+	var animationFrame = webkitRequestAnimationFrame(videoPlaying);
+	scrubBar.style.visibility = 'visible';
+	var curScrubBarFraction = SOTUvideo.currentTime/SOTUvideo.duration;
+	scrubBar.style.left = curScrubBarFraction * hashtagPlot.offsetWidth;
+
+	if (SOTUvideo.ended == true) {
+		webkitCancelAnimationFrame(animationFrame);
+		scrubBar.style.visibility = "hidden";
+	}
 }
 
 function updateScrubBar(e) {
