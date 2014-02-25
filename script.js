@@ -9,8 +9,10 @@ var timestamps = extractTimestamps();
 function extractTimestamps() {
 	var timestamps = [];
 	var stampedDivs = transcript.querySelectorAll('div');
+
 	for (var i = 0; i < stampedDivs.length; i++) {
 		timestamps[i] = parseInt(stampedDivs[i].id.split('-')[2], 10);
+        stampedDivs[i].addEventListener('mousewheel',stampedDivsHandler,false);
 	}
 
 	return timestamps;
@@ -48,6 +50,17 @@ function playVideo(e) {
 	SOTUvideo.play();
 	videoPlaying();
 }
+// Handling the scroll event in the sotu-transcript div
+//transcript.addEventListener('scroll', scrollHandler,false);
+
+function stampedDivsHandler(e) {
+   
+	var ts = parseInt(e.srcElement.parentNode.id.split('-')[2]);
+    scrubBar.fractionScrubbed = (ts - videoOffset)/SOTUvideo.duration;
+    scrubBar.style.left = scrubBar.fractionScrubbed * hashtagPlot.offsetWidth;
+    SOTUvideo.currentTime = SOTUvideo.duration * scrubBar.fractionScrubbed;
+}
+
 // function to display scrubBar moving along with video
 function videoPlaying() {
 	
