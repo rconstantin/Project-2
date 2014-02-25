@@ -189,6 +189,9 @@ function dominantHashtagAt(time) {
 
 function recolorNation(hashtag) {
 	// A function to go through every state and color it correctly for a given hashtag
+    if (stateAbbreviations == null) {
+        return;
+    }
 	for ( var k = 0; k < stateAbbreviations.length; k++ ) {
 		var stateAbbreviation = stateAbbreviations[k];
 		var state = nation.getElementById(stateAbbreviation);
