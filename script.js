@@ -12,7 +12,6 @@ function extractTimestamps() {
 
 	for (var i = 0; i < stampedDivs.length; i++) {
 		timestamps[i] = parseInt(stampedDivs[i].id.split('-')[2], 10);
-        stampedDivs[i].addEventListener('mousewheel',stampedDivsHandler,false);
 	}
 
 	return timestamps;
@@ -38,6 +37,7 @@ var hashtagColors = {
 
 // Run hashtagMousemove every time the mouse moves above the hashtagPlot
 hashtagPlot.addEventListener('mousemove', hashtagMousemove, false);
+
 function hashtagMousemove(e) {
 	updateScrubBar(e);
 	updateVideo(e);
@@ -45,33 +45,57 @@ function hashtagMousemove(e) {
 }
 
 hashtagPlot.addEventListener('mouseout', playVideo, false);
+var syncScrollCount = 0;
 function playVideo(e) {
-	scrubBar.style.visibility = "hidden";
+	// scrubBar.style.visibility = "hidden";
 	SOTUvideo.play();
 	videoPlaying();
-}
-// Handling the scroll event in the sotu-transcript div
-//transcript.addEventListener('scroll', scrollHandler,false);
 
-function stampedDivsHandler(e) {
-   
+}
+
+// Handling the scroll event in the sotu-transcript div
+//transcript.addEventListener('scroll', transcriptwheel,false);
+
+transcript.addEventListener('mousewheel',transcriptwheel,false);
+
+function transcriptwheel(e) {
+    syncScroll = false; // reset to avoid conflict
+    syncScrollCount = 300;
 	var ts = parseInt(e.srcElement.parentNode.id.split('-')[2]);
     scrubBar.fractionScrubbed = (ts - videoOffset)/SOTUvideo.duration;
     scrubBar.style.left = scrubBar.fractionScrubbed * hashtagPlot.offsetWidth;
     SOTUvideo.currentTime = SOTUvideo.duration * scrubBar.fractionScrubbed;
+    if (animationFrame != null) {
+        webkitCancelAnimationFrame(animationFrame);
+        // scrubBar.style.visibility = "hidden";
+        animationFrame = null;
+    }
+    playVideo(e);
+
 }
 
 // function to display scrubBar moving along with video
+var animationFrame = null;
+var syncScroll = true;
 function videoPlaying() {
-	
-	var animationFrame = webkitRequestAnimationFrame(videoPlaying);
+	if (syncScrollCount > 0) {
+        syncScrollCount--;
+    }
+    else {
+        syncScroll = true;
+    }
+	animationFrame = webkitRequestAnimationFrame(videoPlaying);
+
 	scrubBar.style.visibility = 'visible';
 	var curScrubBarFraction = SOTUvideo.currentTime/SOTUvideo.duration;
 	scrubBar.style.left = curScrubBarFraction * hashtagPlot.offsetWidth;
-
+    if (syncScroll == true) {
+        scrollToTimestamp(nearestStamp(curScrubBarFraction));
+    }
 	if (SOTUvideo.ended == true) {
 		webkitCancelAnimationFrame(animationFrame);
 		scrubBar.style.visibility = "hidden";
+        animationFrame = null;
 	}
 }
 
@@ -97,15 +121,15 @@ function updateTranscript(e) {
 
 function scrollToTimestamp(timestamp) {
 	var target = transcript.querySelector('#transcript-time-' + timestamp);
-	document.getElementById('sotu-transcript').scrollTop = target.offsetTop;
+ 	document.getElementById('sotu-transcript').scrollTop = target.offsetTop - target.offsetWidth;
 }
 
 function nearestStamp(fractionScrubbed) {
 	// Figure out what the closest timestamp we have is to the current amount of scrubbing
 	var timestampEquivalent = fractionScrubbed * SOTUvideo.duration + videoOffset; // IF we had a timestamp, what would it be?
-	for (var i = 0; i < timestamps.length - 1; i++) {
-		if ( timestamps[i+1] > timestampEquivalent ) { // Find teh first timestamp our guess is greater than
-			return timestamps[i];
+	for (var i = 1; i < timestamps.length - 1; i++) {
+		if ( timestamps[i] > timestampEquivalent ) { // Find teh first timestamp our guess is greater than
+            return timestamps[i-1];
 		}
 	}
 	return timestamps[timestamps.length - 1];
