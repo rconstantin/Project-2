@@ -118,9 +118,15 @@ function updateVideo(e) {
 function updateTranscript(e) {
 	scrollToTimestamp(nearestStamp(scrubBar.fractionScrubbed));
 }
-
+var prevTarget = null;
 function scrollToTimestamp(timestamp) {
 	var target = transcript.querySelector('#transcript-time-' + timestamp);
+    if (prevTarget != null) {
+        prevTarget.style.backgroundColor = null;
+    }
+    prevTarget = target;
+    target.style.backgroundColor = 'yellow';
+    
  	document.getElementById('sotu-transcript').scrollTop = target.offsetTop - target.offsetWidth;
 }
 
