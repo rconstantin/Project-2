@@ -98,6 +98,7 @@ li a {
 }
 
 #sotu-transcript {
+	position: relative;
 	font-family: 'Crimson Text', serif;
 
 	overflow-y: auto;

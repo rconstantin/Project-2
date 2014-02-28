@@ -12,6 +12,7 @@ function extractTimestamps() {
 
 	for (var i = 0; i < stampedDivs.length; i++) {
 		timestamps[i] = parseInt(stampedDivs[i].id.split('-')[2], 10);
+      //  stampedDivs[i].addEventListener('wheel',transcriptWheel,false);
 	}
 
 	return timestamps;
@@ -20,7 +21,7 @@ function extractTimestamps() {
 // Initialize these for loading later, after window.onload
 var nation = null;
 var statePaths = null;
-var stateAbbreviations = null;
+var stateAbbreviations = [];
 
 // Hardcoded colors for each hashtag, grabbed from the twitter site with https://en.wikipedia.org/wiki/DigitalColor_Meter
 var hashtagColors = {
@@ -36,42 +37,49 @@ var hashtagColors = {
 // Handling the hashtagPlot and scrubBar
 
 // Run hashtagMousemove every time the mouse moves above the hashtagPlot
-hashtagPlot.addEventListener('mousemove', hashtagMousemove, false);
+hashtagPlot.addEventListener('click', hashtagClick, false);
 
-function hashtagMousemove(e) {
+function hashtagClick(e) {
 	updateScrubBar(e);
 	updateVideo(e);
 	updateTranscript(e);
+    hashtagPlot.addEventListener('mouseout', playVideo, false);
+
 }
 
-hashtagPlot.addEventListener('mouseout', playVideo, false);
 var syncScrollCount = 0;
 function playVideo(e) {
-	// scrubBar.style.visibility = "hidden";
 	SOTUvideo.play();
 	videoPlaying();
+    hashtagPlot.removeEventListener('mouseout', playVideo, false);
+
 
 }
-
+// this is needed in case user just hits the start video on startup
+SOTUvideo.addEventListener('play', playVideo,false);
 // Handling the scroll event in the sotu-transcript div
-//transcript.addEventListener('scroll', transcriptwheel,false);
 
-transcript.addEventListener('mousewheel',transcriptwheel,false);
+transcript.addEventListener('wheel',transcriptWheel,false);
 
-function transcriptwheel(e) {
+function transcriptWheel(e) {
     syncScroll = false; // reset to avoid conflict
-    syncScrollCount = 300;
-	var ts = parseInt(e.srcElement.parentNode.id.split('-')[2]);
-    scrubBar.fractionScrubbed = (ts - videoOffset)/SOTUvideo.duration;
-    scrubBar.style.left = scrubBar.fractionScrubbed * hashtagPlot.offsetWidth;
-    SOTUvideo.currentTime = SOTUvideo.duration * scrubBar.fractionScrubbed;
-    if (animationFrame != null) {
-        webkitCancelAnimationFrame(animationFrame);
-        // scrubBar.style.visibility = "hidden";
-        animationFrame = null;
-    }
-    playVideo(e);
+    syncScrollCount = 10;
+    webkitCancelAnimationFrame(animationFrame);
 
+    SOTUvideo.muted = 1;
+
+    var ts = parseInt(e.srcElement.parentNode.id.split('-')[2]);
+    if (ts >= videoOffset) {
+        scrubBar.fractionScrubbed = (ts - videoOffset)/SOTUvideo.duration;
+        scrubBar.style.left = scrubBar.fractionScrubbed * hashtagPlot.offsetWidth;
+        SOTUvideo.currentTime = SOTUvideo.duration * scrubBar.fractionScrubbed;
+        if (animationFrame != null) {
+            webkitCancelAnimationFrame(animationFrame);
+            // scrubBar.style.visibility = "hidden";
+            animationFrame = null;
+        }
+        playVideo(e);
+    }
 }
 
 // function to display scrubBar moving along with video
@@ -83,9 +91,10 @@ function videoPlaying() {
     }
     else {
         syncScroll = true;
+        SOTUvideo.muted = 0;
     }
 	animationFrame = webkitRequestAnimationFrame(videoPlaying);
-
+    
 	scrubBar.style.visibility = 'visible';
 	var curScrubBarFraction = SOTUvideo.currentTime/SOTUvideo.duration;
 	scrubBar.style.left = curScrubBarFraction * hashtagPlot.offsetWidth;
@@ -96,6 +105,7 @@ function videoPlaying() {
 		webkitCancelAnimationFrame(animationFrame);
 		scrubBar.style.visibility = "hidden";
         animationFrame = null;
+        prevTarget.style.backgroundColor = null;
 	}
 }
 
@@ -127,7 +137,7 @@ function scrollToTimestamp(timestamp) {
     prevTarget = target;
     target.style.backgroundColor = 'yellow';
     
- 	document.getElementById('sotu-transcript').scrollTop = target.offsetTop - target.offsetWidth;
+ 	document.getElementById('sotu-transcript').scrollTop = target.offsetTop;
 }
 
 function nearestStamp(fractionScrubbed) {
@@ -219,9 +229,7 @@ function dominantHashtagAt(time) {
 
 function recolorNation(hashtag) {
 	// A function to go through every state and color it correctly for a given hashtag
-    if (stateAbbreviations == null) {
-        return;
-    }
+
 	for ( var k = 0; k < stateAbbreviations.length; k++ ) {
 		var stateAbbreviation = stateAbbreviations[k];
 		var state = nation.getElementById(stateAbbreviation);
