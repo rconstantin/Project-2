@@ -1,7 +1,9 @@
 var hashtagPlot = document.getElementById('hashtag-plot');
 var scrubBar = document.getElementById('scrub-bar');
+var scrubBarPrev = document.getElementById('scrub-bar-preview');
 var SOTUvideo = document.getElementById('sotu-video');
 var videoOffset = 306;
+scrubBarPrev.offsetTop = scrubBar.offsetTop;
 
 // Pull out all the transcript timestamps for use throughout
 var transcript = document.getElementById('sotu-transcript');
@@ -47,16 +49,46 @@ function hashtagClick(e) {
 
 }
 
+// Run hashtagMousemove every time the mouse moves above the hashtagPlot
+hashtagPlot.addEventListener('mouseover', hashtagMouseover, false);
+
+function hashtagMouseover(e) {
+    
+    scrubBarPrev.style.visibility = 'visible';
+    scrubBarPrev.style.left = e.clientX - position(hashtagPlot).x; // e.clientX is the mouse position
+    
+}
+
 var syncScrollCount = 0;
 function playVideo(e) {
 	SOTUvideo.play();
 	videoPlaying();
     hashtagPlot.removeEventListener('mouseout', playVideo, false);
+    scrubBarPrev.style.visibility = "hidden";
 
 
 }
-// this is needed in case user just hits the start video on startup
+// this is needed in case user just hits the start video at startup
 SOTUvideo.addEventListener('play', playVideo,false);
+// this is needed in case user just hits the start video at startup
+/********** TBD
+SOTUvideo.addEventListener('click', toggleVideo,false);
+function toggleVideo(e)
+{
+    console.log(e);
+    console.log(SOTUvideo.paused);
+    if (SOTUvideo.paused == true) {
+        playVideo(e);
+    }
+    else {
+        SOTUvideo.paused = true;
+        webkitCancelAnimationFrame(animationFrame);
+        // scrubBar.style.visibility = "hidden";
+        animationFrame = null;
+    }
+}
+***************/
+
 // Handling the scroll event in the sotu-transcript div
 
 transcript.addEventListener('wheel',transcriptWheel,false);
