@@ -18,11 +18,11 @@ tweets = [[0,   100],
         [1200, 60]];
 
 var hashtagNames = [
-    "#energy",
     "#jobs",
-    "#education",
-    "#fairness",
     "#healthcare",
+    "#fairness",
+    "#energy",
+    "#education",
     "#defense",
 ];
 
@@ -46,11 +46,11 @@ var stack = d3.layout.stack().offset("wiggle"),
     layers = stack(tweets);
 //    layers = stack(nest.entries(function(d) { return getLayers(tweets); }));
 
-var customPalette = ["rgb(50,160,44)", "rgb(255,127,0)", "rgb(178,223,138)", "rgb(252,154,153)", 
-                        "rgb(227,25,27)", "rgb(30,120,180)"];   
+var customPalette = ["rgb(255,127,0)", "rgb(227,25,27)","rgb(252,154,153)",
+                        "rgb(50,160,44)","rgb(178,223,138)","rgb(30,120,180)"];   
 
+//var color = d3.scale.ordinal().range(customPalette);
 var color = d3.scale.ordinal().range(customPalette);
-
 
 var name = d3.scale.ordinal().range(function(d,i) {return "#"+hashtagList[i]});
 
@@ -92,10 +92,11 @@ svg.selectAll("text")
     .append("text")
     .text(function(d,i) {return hashtagNames[i];})
     .attr("x", function(d, i) {
-        return i * (width / layers.length) + (width / layers.length - padding) / 2;
+//        return i * (width / layers.length) + (width / layers.length - padding) / 2;
+        return dominantTweet[i][0]* (width / m);
     })
     .attr("y", function(d,i) {
-        return height/2;
+        return dominantTweet[i][1]*height;
     })
     .attr("text-anchor", "middle")
     .attr("font-family", "sans-serif")
