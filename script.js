@@ -333,19 +333,22 @@ function engagementRange(interval, hashtag) {
 	return range;
 }
 // dictionary containing tweetIntervalStart, tweetIntervalEnd, AllStatesTweets
+var taxesTweetCollection = [];
 var energyTweetCollection = [];
 var jobsTweetCollection = [];
+var immigrationTweetCollection = [];
 var educationTweetCollection = [];
 var fairnessTweetCollection = [];
 var healthcareTweetCollection = [];
 var defenseTweetCollection = [];
+var budgetTweetCollection = [];
 var tweetCollection = [];
-var hashtagList = ['jobs',
+var hashtagList = ['taxes','jobs','immigration',
                     'healthcare',
                     'fairness',
                     'energy',
                     'education',
-                    'defense'];
+                    'defense','budget'];
 var dominantTweet = [];
 for (var i = 0; i < hashtagList.length; i++)
 {
@@ -364,47 +367,49 @@ function tweetsAggregate() {
         var perStateValues = tweetValues[tweetIntervals[i]];
      
     //           tweetCollection[i] = [i,engagementTotal(perStateValues,hashtagList[j]), hashtagList[j]];
-        
+        taxesTweetCollection[i] = engagementTotal(perStateValues,'taxes');
         jobsTweetCollection[i] = engagementTotal(perStateValues,'jobs');
-        if (dominantTweet[0][1] < jobsTweetCollection[i]) {
-            dominantTweet[0][0] = i;
-            dominantTweet[0][1] = jobsTweetCollection[i];
-        }
-        healthcareTweetCollection[i] = engagementTotal(perStateValues,'healthcare');
-        if (dominantTweet[1][1] < healthcareTweetCollection[i]) {
+        if (dominantTweet[1][1] < jobsTweetCollection[i]) {
             dominantTweet[1][0] = i;
-            dominantTweet[1][1] = healthcareTweetCollection[i];
+            dominantTweet[1][1] = jobsTweetCollection[i];
+        }
+        immigrationTweetCollection[i] = engagementTotal(perStateValues,'immigration');
+        healthcareTweetCollection[i] = engagementTotal(perStateValues,'healthcare');
+        if (dominantTweet[3][1] < healthcareTweetCollection[i]) {
+            dominantTweet[3][0] = i;
+            dominantTweet[3][1] = healthcareTweetCollection[i];
         }
         fairnessTweetCollection[i] = engagementTotal(perStateValues,'fairness');
-        if (dominantTweet[2][1] < fairnessTweetCollection[i]) {
-            dominantTweet[2][0] = i;
-            dominantTweet[2][1] = fairnessTweetCollection[i];
+        if (dominantTweet[4][1] < fairnessTweetCollection[i]) {
+            dominantTweet[4][0] = i;
+            dominantTweet[4][1] = fairnessTweetCollection[i];
         }        
         energyTweetCollection[i] = engagementTotal(perStateValues,'energy');
-        if (dominantTweet[3][1] < energyTweetCollection[i]) {
-            dominantTweet[3][0] = i;
-            dominantTweet[3][1] = energyTweetCollection[i];
+        if (dominantTweet[5][1] < energyTweetCollection[i]) {
+            dominantTweet[5][0] = i;
+            dominantTweet[5][1] = energyTweetCollection[i];
         }
         educationTweetCollection[i] = engagementTotal(perStateValues,'education');
-        if (dominantTweet[4][1] < educationTweetCollection[i]) {
-            dominantTweet[4][0] = i;
-            dominantTweet[4][1] = educationTweetCollection[i];
+        if (dominantTweet[6][1] < educationTweetCollection[i]) {
+            dominantTweet[6][0] = i;
+            dominantTweet[6][1] = educationTweetCollection[i];
         }
         defenseTweetCollection[i] = engagementTotal(perStateValues,'defense');
-        if (dominantTweet[5][1] < defenseTweetCollection[i]) {
-            dominantTweet[5][0] = i;
-            dominantTweet[5][1] = defenseTweetCollection[i];
+        if (dominantTweet[7][1] < defenseTweetCollection[i]) {
+            dominantTweet[7][0] = i;
+            dominantTweet[7][1] = defenseTweetCollection[i];
         }
-        
+        budgetTweetCollection[i] = engagementTotal(perStateValues,'budget');
     }
-    dominantTweet[0][1] -= healthcareTweetCollection[dominantTweet[0][0]];
-    dominantTweet[1][1] -= fairnessTweetCollection[dominantTweet[1][0]];
-    dominantTweet[2][1] = dominantTweet[0][1] + jobsTweetCollection[dominantTweet[2][0]];
-    dominantTweet[3][1] -= educationTweetCollection[dominantTweet[3][0]];
-    dominantTweet[4][1] -= jobsTweetCollection[dominantTweet[4][0]];
-    dominantTweet[5][0] -= 7;
-    return ([jobsTweetCollection, healthcareTweetCollection, 
-    fairnessTweetCollection,energyTweetCollection, educationTweetCollection, defenseTweetCollection]);
+    dominantTweet[1][1] -= (healthcareTweetCollection[dominantTweet[1][0]]+immigrationTweetCollection[dominantTweet[1][0]]);
+    dominantTweet[3][1] -= fairnessTweetCollection[dominantTweet[3][0]];
+    dominantTweet[4][1] = dominantTweet[1][1] + 2 * jobsTweetCollection[dominantTweet[4][0]];
+    dominantTweet[5][1] -= educationTweetCollection[dominantTweet[5][0]];
+    dominantTweet[6][1] -= jobsTweetCollection[dominantTweet[6][0]];
+    dominantTweet[7][0] -= 7;
+    dominantTweet[7][1] = dominantTweet[5][1];
+    return ([taxesTweetCollection,jobsTweetCollection, immigrationTweetCollection,healthcareTweetCollection, 
+    fairnessTweetCollection,energyTweetCollection, educationTweetCollection, defenseTweetCollection,budgetTweetCollection]);
 }
 
 function engagementTotal(interval, hashtag) {

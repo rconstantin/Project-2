@@ -18,12 +18,15 @@ tweets = [[0,   100],
         [1200, 60]];
 
 var hashtagNames = [
+    "taxes",
     "#jobs",
+    "immigration",
     "#healthcare",
     "#fairness",
     "#energy",
     "#education",
     "#defense",
+    "energy"
 ];
 
 tweets = tweetsAggregate();
@@ -39,15 +42,15 @@ tweets = tweets.map(function (d) {
     });
 });
 
-var n = 6, // number of layers
+var n = 9, // number of layers
     m = 63; // number of samples per layer
 
 var stack = d3.layout.stack().offset("wiggle"),
     layers = stack(tweets);
 //    layers = stack(nest.entries(function(d) { return getLayers(tweets); }));
 
-var customPalette = ["rgb(255,127,0)", "rgb(227,25,27)","rgb(252,154,153)",
-                        "rgb(50,160,44)","rgb(178,223,138)","rgb(30,120,180)"];   
+var customPalette = ["rgb(187,166,204)","rgb(255,127,0)", "rgb(245,178,98)","rgb(227,25,27)","rgb(252,154,153)",
+                        "rgb(50,160,44)","rgb(178,223,138)","rgb(30,120,180)","rgb(155,195,219)"];   
 
 //var color = d3.scale.ordinal().range(customPalette);
 var color = d3.scale.ordinal().range(customPalette);
