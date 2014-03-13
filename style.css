@@ -5,10 +5,28 @@ html, body {
 }
 
 
+canvas { 
+	position: absolute;
+	outline: none; 
+} /* So that when we click, the canvas isn't outlined */
+.axis path,
+.axis line {
+    fill: none;
+    stroke: black;
+    shape-rendering: crispEdges;
+}
+
+.axis text {
+    font-family: sans-serif;
+    font-size: 11px;
+}
+.layer {
+    stroke:none;
+}
 /* Hashtag Plot */
 
 #hashtag-plot {
-	background: url('./media/hashtagVolume.png'); /* screenshot from twitter's site */
+	/* background: url('./media/hashtagVolume.png'); screenshot from twitter's site */
 	background-size: contain; /* Auto-scaling the image to fit in the div */
 
 	width: 1280px;

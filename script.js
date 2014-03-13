@@ -332,6 +332,61 @@ function engagementRange(interval, hashtag) {
 
 	return range;
 }
+// dictionary containing tweetIntervalStart, tweetIntervalEnd, AllStatesTweets
+var energyTweetCollection = [];
+var jobsTweetCollection = [];
+var educationTweetCollection = [];
+var fairnessTweetCollection = [];
+var healthcareTweetCollection = [];
+var defenseTweetCollection = [];
+var tweetCollection = [];
+var hashtagList = ['jobs',
+                    'healthcare',
+                    'fairness',
+                    'energy',
+                    'education',
+                    'defense'];
+
+function tweetsAggregate() {
+    // build tweet value collection per interval by adding state values per hashtag
+
+    // Get all the tweetIntervals from the tweetValues we loaded from values.json
+    var tweetIntervals = Object.keys(tweetValues);
+    
+    for (var i = 0; i < tweetIntervals.length; i++) {
+        // Tweets are indexed by interval (e.g. 2014-01-29 02:15:::2014-01-29 02:15), and we just want the start of the interval
+        var tweetIntervalStart = new Date(tweetIntervals[i].split(':::')[0]);
+        var tweetIntervalEnd = new Date(tweetIntervals[i].split(':::')[1]);
+        var perStateValues = tweetValues[tweetIntervals[i]];
+     
+    //           tweetCollection[i] = [i,engagementTotal(perStateValues,hashtagList[j]), hashtagList[j]];
+        
+        energyTweetCollection[i] = engagementTotal(perStateValues,'energy');
+        jobsTweetCollection[i] = engagementTotal(perStateValues,'jobs');
+        educationTweetCollection[i] = engagementTotal(perStateValues,'education');
+        fairnessTweetCollection[i] = engagementTotal(perStateValues,'fairness');
+        healthcareTweetCollection[i] = engagementTotal(perStateValues,'healthcare');
+        defenseTweetCollection[i] = engagementTotal(perStateValues,'defense');
+
+        
+    }
+    return ([jobsTweetCollection, healthcareTweetCollection, 
+    fairnessTweetCollection,energyTweetCollection, educationTweetCollection, defenseTweetCollection]);
+}
+
+function engagementTotal(interval, hashtag) {
+    // A function getting the total engagement across all state for a hashtag at an interval
+    var total = 0;
+    for (var state in interval) {
+        var stateData = interval[state];
+        for (var i = 0; i < stateData.length; i++) {
+            if ('#' + hashtag == stateData[i][0]) {
+                total += stateData[i][1];
+            }
+        }
+    }
+    return total;
+}
 
 function updateChart() {
 	// Now that we have all the needed data, actually redraw the chart
