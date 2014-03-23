@@ -26,12 +26,12 @@ canvas {
 /* Hashtag Plot */
 
 #hashtag-plot {
-	/* background: url('./media/hashtagVolume.png'); screenshot from twitter's site */
-	background-size: contain; /* Auto-scaling the image to fit in the div */
-
+	/* background: url('./media/hashtagVolume.png'); screenshot from twitter's site 
+	background-size: contain;  Auto-scaling the image to fit in the div */
+	position: relative;
 	width: 1280px;
 	height: 300px;
-
+	width: 100%;
 	margin-right: auto;
 	margin-left: auto;
 	margin-bottom: 1em;
@@ -60,7 +60,7 @@ canvas {
 }
 
 #container {
-	width: 1280px;
+	width: 1268px;
 
 	margin-left: auto;
 	margin-right: auto;

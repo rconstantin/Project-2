@@ -1,35 +1,21 @@
-var width = 1200,
+var width = 1240,
     padding = 20;
+    w_padding = 0;
     height = 300;
 
-var tweets = [];
-tweets = [[0,   100],
-        [100, 200],
-        [200, 300],
-        [300, 110],
-        [400, 10],
-        [500, 60],
-        [600, 100],
-        [700, 50],
-        [800, 40],
-        [900, 105],
-        [1000, 30],
-        [1100, 120],
-        [1200, 60]];
-
 var hashtagNames = [
-    "taxes",
+    "#taxes",
     "#jobs",
-    "immigration",
+    "#immigration",
     "#healthcare",
     "#fairness",
     "#energy",
     "#education",
     "#defense",
-    "energy"
+    "#energy"
 ];
 
-tweets = tweetsAggregate();
+var tweets = tweetsAggregate();
 
 
 tweets = tweets.map(function (d) {
@@ -47,12 +33,10 @@ var n = 9, // number of layers
 
 var stack = d3.layout.stack().offset("wiggle"),
     layers = stack(tweets);
-//    layers = stack(nest.entries(function(d) { return getLayers(tweets); }));
 
 var customPalette = ["rgb(187,166,204)","rgb(255,127,0)", "rgb(245,178,98)","rgb(227,25,27)","rgb(252,154,153)",
                         "rgb(50,160,44)","rgb(178,223,138)","rgb(30,120,180)","rgb(155,195,219)"];   
 
-//var color = d3.scale.ordinal().range(customPalette);
 var color = d3.scale.ordinal().range(customPalette);
 
 var name = d3.scale.ordinal().range(function(d,i) {return "#"+hashtagList[i]});
@@ -66,10 +50,10 @@ var y = d3.scale.linear()
     .domain([0, d3.max(layers, function(layer) { return d3.max(layer, function(d) 
         { return d.y0 + d.y; }); })])
     .range([0, height]);
-       
+
 var xAxis = d3.svg.axis()
-          .scale(x)
-          .orient("bottom");
+    .scale(x)
+    .orient("bottom");
 
 var area = d3.svg.area()
     .interpolate('cardinal')
@@ -78,8 +62,9 @@ var area = d3.svg.area()
     .y1(function(d) { return y(d.y0 + d.y); });
 
 var svg = d3.select("#hashtag-plot").append("svg")
-    .attr("width", width+padding)
-    .attr("height", height+padding);
+    .attr("width", width)
+    .attr("height", height+padding)
+    ;
 
 svg.selectAll("path")
     .data(layers)
@@ -95,7 +80,6 @@ svg.selectAll("text")
     .append("text")
     .text(function(d,i) {return hashtagNames[i];})
     .attr("x", function(d, i) {
-//        return i * (width / layers.length) + (width / layers.length - padding) / 2;
         return dominantTweet[i][0]* (width / m);
     })
     .attr("y", function(d,i) {
@@ -112,10 +96,3 @@ svg.append("g")
     .call(xAxis)
     ;
 
-
-function getLayers(tweets,m) {
-    //return a.map(function(d, i) { return {x: i, y: Math.max(0, d)}; });
-
-    return tweets.map(function(d, i) { return {x: tweets[i][0], y: tweets[i][1] }});
-
-}

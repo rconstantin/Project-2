@@ -4,6 +4,7 @@ var scrubBarPrev = document.getElementById('scrub-bar-preview');
 var SOTUvideo = document.getElementById('sotu-video');
 var videoOffset = 306;
 scrubBarPrev.offsetTop = scrubBar.offsetTop;
+var svgOffset = 40;
 
 // Pull out all the transcript timestamps for use throughout
 var transcript = document.getElementById('sotu-transcript');
@@ -55,8 +56,9 @@ hashtagPlot.addEventListener('mouseover', hashtagMouseover, false);
 function hashtagMouseover(e) {
     
     scrubBarPrev.style.visibility = 'visible';
-    scrubBarPrev.style.left = e.clientX - position(hashtagPlot).x; // e.clientX is the mouse position
-    
+ 
+    scrubBarPrev.style.left = e.clientX - position(hashtagPlot).x - 25; // e.clientX is the mouse position
+
 }
 
 var syncScrollCount = 0;
@@ -366,7 +368,6 @@ function tweetsAggregate() {
         var tweetIntervalEnd = new Date(tweetIntervals[i].split(':::')[1]);
         var perStateValues = tweetValues[tweetIntervals[i]];
      
-    //           tweetCollection[i] = [i,engagementTotal(perStateValues,hashtagList[j]), hashtagList[j]];
         taxesTweetCollection[i] = engagementTotal(perStateValues,'taxes');
         jobsTweetCollection[i] = engagementTotal(perStateValues,'jobs');
         if (dominantTweet[1][1] < jobsTweetCollection[i]) {
