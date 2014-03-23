@@ -28,13 +28,14 @@ canvas {
 #hashtag-plot {
 	/* background: url('./media/hashtagVolume.png'); screenshot from twitter's site 
 	background-size: contain;  Auto-scaling the image to fit in the div */
-	position: relative;
-	width: 1280px;
+	position: fixed;
+	width: 1240px;
 	height: 300px;
-	width: 100%;
+	top: 0px;
 	margin-right: auto;
 	margin-left: auto;
 	margin-bottom: 1em;
+	overflow: hidden;
 }
 
 #scrub-bar {
@@ -60,7 +61,7 @@ canvas {
 }
 
 #container {
-	width: 1268px;
+	width: 1240px;
 
 	margin-left: auto;
 	margin-right: auto;

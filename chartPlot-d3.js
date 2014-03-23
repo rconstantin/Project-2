@@ -41,10 +41,12 @@ var color = d3.scale.ordinal().range(customPalette);
 
 var name = d3.scale.ordinal().range(function(d,i) {return "#"+hashtagList[i]});
 
-
-var x = d3.scale.linear()
-    .domain([0, tweets[0].length])
-    .range([0, width]);
+var x = d3.time.scale()
+    .domain([tweetIntervalStart[0], tweetIntervalStart[62]])
+    .range([0,width]);
+//var x = d3.scale.linear()
+//    .domain([0, tweets[0].length])
+//    .range([0, width]);
 
 var y = d3.scale.linear()
     .domain([0, d3.max(layers, function(layer) { return d3.max(layer, function(d) 
@@ -56,12 +58,12 @@ var xAxis = d3.svg.axis()
     .orient("bottom");
 
 var area = d3.svg.area()
-    .interpolate('cardinal')
-    .x(function(d,i) { return x(i); })
+    .interpolate('basis')
+    .x(function(d,i) { return x(tweetIntervalStart[i]); })
     .y0(function(d) { return y(d.y0); })
     .y1(function(d) { return y(d.y0 + d.y); });
 
-var svg = d3.select("#hashtag-plot").append("svg")
+var svg = d3.select("#streamgraph").append("svg")
     .attr("width", width)
     .attr("height", height+padding)
     ;

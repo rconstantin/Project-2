@@ -57,7 +57,7 @@ function hashtagMouseover(e) {
     
     scrubBarPrev.style.visibility = 'visible';
  
-    scrubBarPrev.style.left = e.clientX - position(hashtagPlot).x - 25; // e.clientX is the mouse position
+    scrubBarPrev.style.left = e.clientX - position(hashtagPlot).x; // e.clientX is the mouse position
 
 }
 
@@ -345,6 +345,7 @@ var healthcareTweetCollection = [];
 var defenseTweetCollection = [];
 var budgetTweetCollection = [];
 var tweetCollection = [];
+var tweetIntervalStart = [];
 var hashtagList = ['taxes','jobs','immigration',
                     'healthcare',
                     'fairness',
@@ -364,8 +365,8 @@ function tweetsAggregate() {
     
     for (var i = 0; i < tweetIntervals.length; i++) {
         // Tweets are indexed by interval (e.g. 2014-01-29 02:15:::2014-01-29 02:15), and we just want the start of the interval
-        var tweetIntervalStart = new Date(tweetIntervals[i].split(':::')[0]);
-        var tweetIntervalEnd = new Date(tweetIntervals[i].split(':::')[1]);
+        tweetIntervalStart[i] = new Date(tweetIntervals[i].split(':::')[0] + ' GMT');
+      //  var tweetIntervalEnd = new Date(tweetIntervals[i].split(':::')[1]) + ' GMT');
         var perStateValues = tweetValues[tweetIntervals[i]];
      
         taxesTweetCollection[i] = engagementTotal(perStateValues,'taxes');
