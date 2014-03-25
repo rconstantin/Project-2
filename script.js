@@ -506,11 +506,21 @@ function screenShot() {
     // Define some vars required later
     var w, h, ratio;
     ratio = SOTUvideo.videoWidth / SOTUvideo.videoHeight;
-    w = 1240;
-    h = 300; /*parseInt(w / ratio, 10);*/
-    canvas.width = w;
-    canvas.height = h;
+    w = 240;
+    h = parseInt(w / ratio, 10);
+    canvas.width = 1240;
+    canvas.height = 300;
     context.drawImage(SOTUvideo, 0, 0, w, h);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 250,0,300,135);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 0,135,300,135);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 500,0,300,135);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 750,0,300,135);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 1000,0,300,135);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 250,135,300,135);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 500,135,300,135);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 750,135,300,135);
+    context.drawImage(SOTUvideo, 0, 0, 1600, 600, 1000,135,300,135);
+    
 }
 
 ////////////////////////////////////////////////////////////////////////////////
