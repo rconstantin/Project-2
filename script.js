@@ -119,6 +119,8 @@ function transcriptWheel(e) {
 // function to display scrubBar moving along with video
 var animationFrame = null;
 var syncScroll = true;
+var screenShotFlag = false;
+var screenShotCount = 0;
 function videoPlaying() {
 	if (syncScrollCount > 0) {
         syncScrollCount--;
@@ -127,8 +129,13 @@ function videoPlaying() {
         syncScroll = true;
         SOTUvideo.muted = 0;
     }
+    if (screenShotCount > 0) {
+        screenShotCount--;
+    }
+    else {
+        screenShotFlag = true;
+    }
 	animationFrame = webkitRequestAnimationFrame(videoPlaying);
-    
 	scrubBar.style.visibility = 'visible';
 	var curScrubBarFraction = SOTUvideo.currentTime/SOTUvideo.duration;
 	scrubBar.style.left = curScrubBarFraction * hashtagPlot.offsetWidth;
@@ -141,6 +148,11 @@ function videoPlaying() {
         animationFrame = null;
         prevTarget.style.backgroundColor = null;
 	}
+    if (screenShotFlag == true) {
+        screenShot();
+        screenShotFlag = false;
+        screenShotCount = 300;
+    }
 }
 
 function updateScrubBar(e) {
@@ -486,6 +498,20 @@ function getTotalEngagement(interval, hashtag) {
 	return sum;
 }
 
+function screenShot() {
+    var canvas = document.querySelector('canvas');
+    // Get a handle on the 2d context of the canvas element
+    var context = canvas.getContext('2d');
+
+    // Define some vars required later
+    var w, h, ratio;
+    ratio = SOTUvideo.videoWidth / SOTUvideo.videoHeight;
+    w = 1240;
+    h = 300; /*parseInt(w / ratio, 10);*/
+    canvas.width = w;
+    canvas.height = h;
+    context.drawImage(SOTUvideo, 0, 0, w, h);
+}
 
 ////////////////////////////////////////////////////////////////////////////////
 // Utility functions

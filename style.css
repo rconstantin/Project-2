@@ -5,10 +5,24 @@ html, body {
 }
 
 
-canvas { 
+#canvas { 
 	position: absolute;
-	outline: none; 
-} /* So that when we click, the canvas isn't outlined */
+	top: 0px;
+	left: 40px;
+   	text-align:center;
+	opacity: 0.2;
+} 
+
+canvas {
+   	margin: 0 auto;
+    vertical-align: middle;
+}
+
+#streamgraph {
+	position: absolute;
+	top: 0px;
+	left:40px;
+}
 .axis path,
 .axis line {
     fill: none;
@@ -32,6 +46,7 @@ canvas {
 	width: 1240px;
 	height: 300px;
 	top: 0px;
+	left:40px;
 	margin-right: auto;
 	margin-left: auto;
 	margin-bottom: 1em;
@@ -55,6 +70,7 @@ canvas {
 	opacity: 0.4;
 	width: 14px;
 	left: 0;
+	z-index: 1;
 	visibility: hidden; /* We hide it so that it doesn't show up by default */
 	height: 100%;
 	background-color: lightblue;
@@ -62,7 +78,9 @@ canvas {
 
 #container {
 	width: 1240px;
-
+	position: absolute;
+	top: 320;
+	left:40px;
 	margin-left: auto;
 	margin-right: auto;
 
